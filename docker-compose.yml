@@ -16,6 +16,9 @@ services:
     env_file: .env
     volumes:
       - static:/backend_static
+      - userfiles:/backend/user_files
+    ports:
+      - 9000:9000
   frontend:
     env_file: .env
     build: ./frontend/
