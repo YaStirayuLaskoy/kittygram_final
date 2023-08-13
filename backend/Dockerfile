@@ -10,6 +10,4 @@ RUN pip install -r requirements.txt --no-cache-dir
 
 COPY . .
 
-# При старте контейнера запустить сервер разработки.
-# Ключ --bind 0.0.0.0:8000 привяжет приложение к порту 8000, доступному извне
-CMD ["gunicorn", "--bind", "0.0.0.0:9000", "backend.wsgi"]
+CMD ["gunicorn", "--bind", "0.0.0.0:9000", "kittygram_backend.wsgi"]

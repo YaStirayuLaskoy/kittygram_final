@@ -18,7 +18,7 @@ services:
       - static_volume:/backend_static
   frontend:
     env_file: .env
-    build: hashut/kittygram_frontend
+    image: hashut/kittygram_frontend
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static_volume:/frontend_static
