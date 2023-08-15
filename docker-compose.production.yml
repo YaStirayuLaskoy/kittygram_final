@@ -17,12 +17,16 @@ services:
     volumes:
       - static_volume:/backend_static/
       - media:/app/media
+    depends_on:
+      - db
   frontend:
     env_file: .env
     image: hashut/kittygram_frontend
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static_volume:/frontend_static
+    depends_on:
+      - backend
   gateway:
     image: hashut/kittygram_gateway
     env_file: .env
@@ -31,3 +35,5 @@ services:
       - media:/app/media/
     ports:
       - 9000:80
+    depends_on:
+      - frontend
