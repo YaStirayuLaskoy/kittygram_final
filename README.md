@@ -1,26 +1,112 @@
-#  Как работать с репозиторием финального задания
+# Kittygram
 
-## Что нужно сделать
+### Ссылка на Kittygram: https://kittygramich.ddnsking.com/
 
-Настроить запуск проекта Kittygram в контейнерах и CI/CD с помощью GitHub Actions
+## Описание
 
-## Как проверить работу с помощью автотестов
+Kittygram - социальная сеть для любителей котиков, которые хотят делиться увлекательными фотографиями своих пушистых компаньонов. Этот проект включает в себя полностью функциональное бэкэнд-приложение на Django и фронтэнд-приложение на React.
+Является альтернативным варинатом [Kittygram](https://github.com/YaStirayuLaskoy/infra_sprint1) с использованием Docker контейнеров
 
-В корне репозитория создайте файл tests.yml со следующим содержимым:
-```yaml
-repo_owner: ваш_логин_на_гитхабе
-kittygram_domain: полная ссылка (https://доменное_имя) на ваш проект Kittygram
-taski_domain: полная ссылка (https://доменное_имя) на ваш проект Taski
-dockerhub_username: ваш_логин_на_докерхабе
+Целью проекта является практическое погружение в развертывание проекта на сервере с помощью контейнеров Docker.
+
+## Возможности проекта
+
+- Регистрация и авторизация пользователей
+- Добавление и изменение профилей котиков
+- Просмотр и взаимодействие с публикациями других пользователей
+
+## Технологии и инструменты
+
+- Python (Бэкенд)
+- React (Фронтенд)
+- WSGI-сервер [Gunicorn](https://gunicorn.org/)
+- WEB-сервер [Nginix](https://nginx.org/ru/docs/)
+- Зарегистрированное доменное имя [No-ip](https://www.noip.com/)
+- Шифрование через HTTPS [Let's Encrypt](https://letsencrypt.org/)
+- Мониторинг доступности и сбор ошибок [UptimeRobot](https://uptimerobot.com/)
+- Для обеспечения безопасности, секреты подгружаются из файла .env. В файле .env содержатся важные константы, которые строго исключены из хранения в коде проекта. Настройка находится в блоке "Подключение к Kittygram".
+- [Docker](https://www.docker.com/products/docker-desktop/)
+
+
+## Как запустить Kittygram на сервере
+
+#### Создать директорию kittygram на сервере
+```
+cd
 ```
 
-Скопируйте содержимое файла `.github/workflows/main.yml` в файл `kittygram_workflow.yml` в корневой директории проекта.
+```
+mkdir kittygram
+```
+```
+cd kittygram
+```
 
-Для локального запуска тестов создайте виртуальное окружение, установите в него зависимости из backend/requirements.txt и запустите в корневой директории проекта `pytest`.
+#### Устанавлить Docker Compose на сервер
 
-## Чек-лист для проверки перед отправкой задания
+```
+sudo apt update
+sudo apt install curl
+curl -fSL https://get.docker.com -o get-docker.sh
+sudo sh ./get-docker.sh
+sudo apt-get install docker-compose-plugin 
+```
 
-- Проект Taski доступен по доменному имени, указанному в `tests.yml`.
-- Проект Kittygram доступен по доменному имени, указанному в `tests.yml`.
-- Пуш в ветку main запускает тестирование и деплой Kittygram, а после успешного деплоя вам приходит сообщение в телеграм.
-- В корне проекта есть файл `kittygram_workflow.yml`.
+#### Перенести *docker-compose.production.yml* на сервер
+
+```
+scp -i path_to_SSH/SSH_name docker-compose.production.yml \
+    username@server_ip:/home/username/taski/docker-compose.production.yml
+```
+- path_to_SSH — путь к файлу с SSH-ключом;
+- SSH_name — имя файла с SSH-ключом (без расширения);
+- username — ваше имя пользователя на сервере;
+- server_ip — IP вашего сервера.
+
+#### Запустить демона
+
+```
+sudo docker compose -f docker-compose.production.yml up -d
+```
+
+#### Выполнить миграции
+
+```
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
+sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
+```
+
+## Как запустить Kittygram локально
+
+#### Клонировать репозиторий
+
+```
+git clone git@github.com:YaStirayuLaskoy/kittygram_final.git
+```
+
+#### Запустить
+
+```
+sudo docker compose -f docker-compose.yml up
+```
+#### Собрать статику
+
+```
+docker compose -f docker-compose.production.yml exec backend python manage.py migrate
+docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
+docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
+```
+
+## Секретики
+
+```
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_DB=
+
+DB_HOST=
+DB_PORT=
+SECRET_KEY=
+DEBUG=
+```
