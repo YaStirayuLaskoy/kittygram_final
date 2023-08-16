@@ -4,7 +4,10 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv()
+env_path = Path('/backend/kittygram_backend/.env')
+load_dotenv(dotenv_path=env_path)
+
+# load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
