@@ -25,7 +25,7 @@ Kittygram - социальная сеть для любителей котико
 - Зарегистрированное доменное имя [No-ip](https://www.noip.com/)
 - Шифрование через HTTPS [Let's Encrypt](https://letsencrypt.org/)
 - Мониторинг доступности и сбор ошибок [UptimeRobot](https://uptimerobot.com/)
-- Для обеспечения безопасности, секреты подгружаются из файла .env. В файле .env содержатся важные константы, которые строго исключены из хранения в коде проекта. Настройка находится в блоке "Подключение к Kittygram".
+- Для обеспечения безопасности, секреты подгружаются из файла .env. В файле .env содержатся важные константы, которые строго исключены из хранения в коде проекта. Настройка находится в блоке "Как запустить Kittygram".
 - [Docker](https://www.docker.com/products/docker-desktop/)
 - Автоматизирровано тестирование и деплой проекта Kittygram с помощью GitHub Actions
 
@@ -58,12 +58,20 @@ sudo apt-get install docker-compose-plugin
 
 ```
 scp -i path_to_SSH/SSH_name docker-compose.production.yml \
-    username@server_ip:/home/username/taski/docker-compose.production.yml
+    username@server_ip:/home/username/kittygram/docker-compose.production.yml
 ```
+#### Перенести *.env* на сервер, вставив туда значения из .env.template
+
+'''
+scp -i path_to_SSH/SSH_name .env \
+    username@server_ip:/home/username/kittygram/.env
+'''
+
 - path_to_SSH — путь к файлу с SSH-ключом;
 - SSH_name — имя файла с SSH-ключом (без расширения);
 - username — ваше имя пользователя на сервере;
 - server_ip — IP вашего сервера.
+
 
 #### Запустить демона
 
@@ -87,6 +95,8 @@ sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/col
 git clone git@github.com:YaStirayuLaskoy/kittygram_final.git
 ```
 
+#### Создать *.env* в корневой директории, вставив туда значения из .env.template
+
 #### Запустить
 
 ```
@@ -98,17 +108,4 @@ sudo docker compose -f docker-compose.yml up
 docker compose -f docker-compose.production.yml exec backend python manage.py migrate
 docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
 docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
-```
-
-## Секретики
-
-```
-POSTGRES_USER=
-POSTGRES_PASSWORD=
-POSTGRES_DB=
-
-DB_HOST=
-DB_PORT=
-SECRET_KEY=
-DEBUG=
 ```
