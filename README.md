@@ -62,10 +62,10 @@ scp -i path_to_SSH/SSH_name docker-compose.production.yml \
 ```
 #### Перенести *.env* на сервер, вставив туда значения из .env.template
 
-'''
+```
 scp -i path_to_SSH/SSH_name .env \
     username@server_ip:/home/username/kittygram/.env
-'''
+```
 
 - path_to_SSH — путь к файлу с SSH-ключом;
 - SSH_name — имя файла с SSH-ключом (без расширения);
